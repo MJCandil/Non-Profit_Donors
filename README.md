@@ -1,2 +1,2 @@
 # Non-Profit_Donors
- SQL Coding for Non-Profit Donors Project
+ *SAMPLE* SQL Coding for Non-Profit Donors Project
