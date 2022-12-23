@@ -1,0 +1,67 @@
+/*clean, complete*/
+
+SELECT COUNT(DISTINCT id) as calc 
+FROM (
+	
+SELECT members.id, number_of_members, commit_card, mailing_returned, has_donated, census_card, status, phone, zip, email
+FROM (
+	SELECT id, has_donated, census_card, 
+		CASE
+			WHEN status is null THEN 'Active'
+			ELSE status END
+			AS status,
+		CASE 
+			WHEN commit_card is null THEN 'false'
+	 		ELSE 'true' END
+			AS commit_card,
+		CASE
+			WHEN mailing_returned is null THEN 'false'
+			ELSE 'true' END
+			AS mailing_returned,
+		CASE
+			WHEN phone is null THEN 'false'
+			ELSE 'true' END
+			AS phone,
+		CASE
+			WHEN zip is null THEN 'false'
+			ELSE zip END
+			AS zip,
+
+		CASE
+			WHEN email is null THEN 'false'
+			ELSE 'true' END
+			AS email
+	FROM (
+		SELECT *
+			FROM(
+				SELECT *,
+					CASE
+						WHEN last_ten LIKE '%-%' THEN LEFT(last_ten, 5)
+						ELSE RIGHT(last_ten, 5)
+						END AS zip
+				FROM(
+					SELECT *,
+						RIGHT(address_block, 10) AS last_ten
+					FROM general_info as gi
+					) AS code
+				) AS code_final
+		) AS ch
+
+
+		
+	 ) AS clean
+
+JOIN members
+	ON clean.id = members.id
+
+) AS calculations
+
+/*Following queries used for calculations to confirm Tableau created calculated fields.
+Different queries where used, this is just a sample*/
+
+WHERE status != 'Active'
+	AND (has_donated = 'true' OR census_card = 'Turned in Card')
+	
+	
+	
+;
